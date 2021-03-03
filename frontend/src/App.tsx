@@ -4,11 +4,13 @@ import GlobalStyle from "./GlobalStyle";
 import { Switch, Route } from "react-router-dom";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import Loading from "./components/Loading";
 
 const App = () => {
   return (
     <div className="App">
       <GlobalStyle />
+      <Loading />
       <Nav />
       <Background />
       <Switch>

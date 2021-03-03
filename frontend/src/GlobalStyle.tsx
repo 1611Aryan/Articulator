@@ -22,6 +22,10 @@ body{
 * button{
     cursor:pointer;
 }
+.hide-loading{
+    opacity:0;
+    pointer-events:none;
+}
 `;
 
 export default GlobalStyle;
