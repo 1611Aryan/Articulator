@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export const StyledLogin = styled.div`
+export const StyledLogin = styled(motion.div)`
   --headingColor: #fff;
   --formBg: rgba(0, 0, 0, 0.2);
   width: 50vw;
@@ -12,10 +13,16 @@ export const StyledLogin = styled.div`
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
+
   h3 {
     color: var(--headingColor);
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 600;
+  }
+  p {
+    width: 100%;
+    color: red;
+    font-size: clamp(0.8rem, 2vw, 1rem);
   }
   //
   @media (max-width: 800px) {
@@ -23,10 +30,13 @@ export const StyledLogin = styled.div`
   }
   @media (max-width: 600px) {
     width: 75vw;
+    height: 70vh;
     justify-content: space-evenly;
   }
   @media (max-width: 400px) {
     width: 85vw;
+    height: 60vh;
+    padding: 1rem 0;
   }
 `;
 
@@ -130,7 +140,7 @@ export const StyledForm = styled.form`
     }
   }
   @media (max-width: 600px) {
-    padding: 2rem 1rem;
+    padding: 1rem;
     button {
       padding: clamp(0.7rem, 2vw, 1rem) 2rem;
     }

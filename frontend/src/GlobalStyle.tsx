@@ -14,17 +14,23 @@ const GlobalStyle = createGlobalStyle`
 body{
     width:100vw;
     min-height:100vh;
-    font-family: 'Poppins', sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    font-family: 'Poppins', sans-serif;  
 }
 * button{
     cursor:pointer;
 }
 .hide-loading{
-    opacity:0;
+    opacity:0 !important;
     pointer-events:none;
+}
+.App{
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    flex-direction:column;
+    align-items:center;
 }
 `;
 

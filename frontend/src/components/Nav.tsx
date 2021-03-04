@@ -19,10 +19,11 @@ const StyledNav = styled.nav`
   width: 100vw;
   height: 8vh;
   backdrop-filter: blur(2px);
-  position: absolute;
+  margin-bottom: auto;
+  /* position: absolute;
   top: 0;
-  left: 0;
-  border-radius: 0 0 25px 25px;
+  left: 0; */
+  // border-radius: 0 0 25px 25px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.4);
   background: rgba(0, 0, 0, 0.3);
   z-index: 9;

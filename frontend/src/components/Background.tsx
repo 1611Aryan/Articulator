@@ -4,9 +4,7 @@ import backgroundImage from "./../IMG/pebbels.jpg";
 import backgroundVideo from "./../IMG/2.mp4";
 
 const Background = () => {
-  const videoRef:
-    | ((instance: HTMLVideoElement | null) => void)
-    | React.RefObject<HTMLVideoElement> = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   if (videoRef.current) {
     videoRef.current.playbackRate = 0.75;
