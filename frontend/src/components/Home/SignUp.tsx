@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { _escapeString } from "./../util";
-import { StyledForm, StyledLogin } from "./../Style";
+import { StyledForm, StyledLogin } from "../../Style";
+import { _escapeString } from "../../util";
 
-const Login = () => {
+const SignUp = () => {
   //URL
   const url =
     process.env.NODE_ENV === "production"
-      ? "/user/login"
-      : "http://localhost:5000/user/login";
+      ? "/user/signup"
+      : "http://localhost:5000/user/signup";
 
   //State
   const [input, setInput] = useState<{
     email: string;
     password: string;
+    name: string;
   }>({
+    name: "",
     email: "",
     password: "",
   });
@@ -24,6 +25,7 @@ const Login = () => {
 
   //Effects
   useEffect(() => {
+    localStorage.getItem("accessToken");
     setAnimate(true);
     return () => setAnimate(false);
   }, []);
@@ -32,23 +34,25 @@ const Login = () => {
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput({ ...input, [e.target.name]: _escapeString(e.target.value) });
   };
+
   const submitHandler = async (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
     try {
       const res = await axios.post(url, {
         email: input.email,
+        name: input.name,
         password: input.password,
       });
-      localStorage.setItem("accessToken", res.data.accessToken);
+      console.log(res.data);
     } catch (err) {
       console.log(err.response.data, err.response.status);
       setMessage(err.response.data);
     } finally {
-      setInput({ email: "", password: "" });
+      setInput({ email: "", password: "", name: "" });
     }
   };
 
-  //variant
+  //Variants
   const variants = {
     visible: {
       clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
@@ -66,37 +70,36 @@ const Login = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       onSubmit={submitHandler}
     >
-      <h3 onClick={() => setAnimate(!animate)}>LOGIN!!!!!</h3>
+      <h3>Sign Up</h3>
       <StyledForm>
         <div className="fieldContainer">
           <p>{message}</p>
-          <label htmlFor="email">Email :</label>
-          <br />
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
             name="email"
-            value={input.email}
             required
             autoFocus
             onChange={changeHandler}
           />
         </div>
         <div className="fieldContainer">
-          <label htmlFor="password">Password :</label>
-          <br />
+          <label htmlFor="name">Name:</label>
+          <input type="text" name="name" required onChange={changeHandler} />
+        </div>
+        <div className="fieldContainer">
+          <label htmlFor="">Password:</label>
           <input
             type="password"
             name="password"
-            value={input.password}
             required
             onChange={changeHandler}
           />
         </div>
-        <Link to="/forgot">Forgot Password ?</Link>
-        <button>LogIn</button>
+        <button>Sign Up!!!</button>
       </StyledForm>
     </StyledLogin>
   );
 };
 
-export default Login;
+export default SignUp;

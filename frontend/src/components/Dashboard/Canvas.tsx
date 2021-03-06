@@ -1,0 +1,125 @@
+import styled from "styled-components";
+import { useEffect } from "react";
+
+const Canvas = () => {
+  useEffect(() => {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext("2d");
+
+    class Circle {
+      x: number;
+      y: number;
+      radius: number;
+      color: string;
+      dx: number;
+      dy: number;
+      constructor(
+        x: number,
+        y: number,
+        radius: number,
+        color: string,
+        speed: number
+      ) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.dx = Math.random() * speed - speed / 2;
+        this.dy = Math.random() * speed - speed / 2;
+      }
+
+      render = () => {
+        if (ctx) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+      };
+      move = () => {
+        if (this.x + this.radius >= canvas.width || this.x - this.radius <= 0) {
+          this.dx = -this.dx;
+        }
+        if (
+          this.y + this.radius >= canvas.height ||
+          this.y - this.radius <= 0
+        ) {
+          this.dy = -this.dy;
+        }
+        this.x += this.dx;
+        this.y += this.dy;
+        this.render();
+      };
+    }
+
+    const randomColor = () => {
+      let color = {
+        r: Math.random(),
+        g: Math.random(),
+        b: Math.random(),
+        a: Math.random() / 4 + 0.25,
+      };
+      if (color.r === 0 && color.g === 0 && color.b === 0) {
+        color = {
+          r: 1,
+          g: 1,
+          b: 1,
+          a: 0.5,
+        };
+      }
+      return `rgba(${color.r * 255},${color.g * 255},${color.b * 255},${
+        color.a
+      })`;
+    };
+
+    const circles: Circle[] = [];
+    let radiusFactor = window.innerWidth / 10;
+    let speedFactor = 7;
+    //?speed and radius is decided based on the width of device
+    if (window.innerWidth < 700) {
+      radiusFactor = window.innerWidth / 12;
+      speedFactor = 6;
+    }
+    if (window.innerWidth < 400) {
+      radiusFactor = window.innerWidth / 9;
+      speedFactor = 5;
+    }
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    for (let i = 0; i < 4; i++) {
+      let radius = Math.random() * radiusFactor + radiusFactor;
+      let x = Math.random() * (window.innerWidth - radius * 2) + radius;
+      let y = Math.random() * (window.innerHeight - radius * 2) + radius;
+      let color = randomColor();
+      //?Speed factor and radius is used from the if statements present above
+      const circle = new Circle(x, y, radius, color, speedFactor);
+      circles.push(circle);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      circles.forEach(circle => {
+        circle.move();
+      });
+    }
+
+    animate();
+  });
+
+  return <StyledCanvas id="canvas"></StyledCanvas>;
+};
+
+const StyledCanvas = styled.canvas`
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+`;
+
+export default Canvas;
