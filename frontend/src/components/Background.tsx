@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import backgroundImage from "./../IMG/pebbels.jpg";
+import pebblesJpg from "./../IMG/pebbels.jpg";
+import pebblesWebp from "./../IMG/pebbels.webp";
+import pebblesAvif from "./../IMG/pebbels.avif";
 import backgroundVideo from "./../IMG/2.mp4";
 
 const Background = () => {
@@ -12,7 +14,13 @@ const Background = () => {
 
   return (
     <StyledBackground>
-      <img src={backgroundImage} alt="" />
+      <picture>
+        <source srcSet={pebblesAvif} type="image/avif" />
+        <source srcSet={pebblesWebp} type="image/webp" />
+        <source srcSet={pebblesJpg} type="image/jpg" />
+        <img src={pebblesJpg} alt="pebbles" />
+      </picture>
+
       <video ref={videoRef} src={backgroundVideo} muted loop autoPlay></video>
     </StyledBackground>
   );

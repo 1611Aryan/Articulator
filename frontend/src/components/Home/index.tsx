@@ -7,7 +7,7 @@ import SignUp from "./SignUp";
 
 const Home = () => {
   let login = true;
-  if (!login)
+  if (login)
     return (
       <StyledHome>
         <Nav />
