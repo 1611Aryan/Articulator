@@ -1,13 +1,49 @@
+import { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import styled from "styled-components";
+import useLocalStorage from "./../../Hooks/useLocalStorage";
+import axios from "axios";
+
 import Background from "../Background";
 import Nav from "../Nav";
 import Login from "./Login";
 import SignUp from "./SignUp";
+import Dashboard from "./../../components/Dashboard";
 
 const Home = () => {
-  let login = true;
-  if (login)
+  //URL
+  const url =
+    process.env.NODE_ENV === "production"
+      ? "/user/authorize"
+      : "http://localhost:5000/user/authorize";
+
+  //Local Storage
+  const [token, setToken] = useLocalStorage("auth", null);
+
+  //State
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (token)
+      (async () => {
+        try {
+          const res = await axios.post(
+            url,
+            {},
+            {
+              headers: { authToken: token },
+            }
+          );
+          if (res.data.auth) setUser(res.data.user);
+          else setToken(null);
+        } catch (err) {
+          console.log(err);
+        }
+      })();
+    else setUser(null);
+  }, [setToken, url, token]);
+
+  if (user === null)
     return (
       <StyledHome>
         <Nav />
@@ -15,7 +51,7 @@ const Home = () => {
         <div className="content">
           <Switch>
             <Route path="/" exact>
-              <Login />
+              <Login setToken={setToken} />
             </Route>
             <Route path="/signUp" exact>
               <SignUp />
@@ -24,7 +60,7 @@ const Home = () => {
         </div>
       </StyledHome>
     );
-  else return null;
+  else return <Dashboard setToken={setToken} />;
 };
 
 const StyledHome = styled.section`

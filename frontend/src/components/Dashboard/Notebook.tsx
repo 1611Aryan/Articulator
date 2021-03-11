@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -37,13 +37,24 @@ const Notebook: React.FC<{
     setRename(false);
   };
 
+  const blurHandler = () => {
+    console.log("Blur");
+    allowRename();
+    setNewName("");
+  };
+
   return (
     <StyledNotebook>
       <StyledNotebookContent></StyledNotebookContent>
       <StyledInformation>
         {rename ? (
           <>
-            <input value={newName} type="text" onChange={changeHandler} />
+            <input
+              value={newName}
+              type="text"
+              onChange={changeHandler}
+              onBlur={blurHandler}
+            />
             {newName === "" ? (
               <FontAwesomeIcon icon={faTimes} onClick={allowRename} />
             ) : (
@@ -65,13 +76,14 @@ const StyledNotebook = styled.li`
   width: 20%;
   aspect-ratio: 1/1.1;
   border-radius: 20px;
-  background: #026590;
+  background: rgb(2, 101, 144);
   border: 3px solid #114b5f;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   font-family: lato;
+  opacity: 0.95;
 `;
 
 const StyledNotebookContent = styled.div`
@@ -79,6 +91,7 @@ const StyledNotebookContent = styled.div`
   flex-grow: 1;
   border-radius: 10px;
   background: #fafafa;
+  cursor: pointer;
 `;
 
 const StyledInformation = styled.div`

@@ -5,7 +5,7 @@ const Canvas = () => {
   useEffect(() => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = (window.innerHeight * 9) / 10;
     const ctx = canvas.getContext("2d");
 
     class Circle {
@@ -15,6 +15,7 @@ const Canvas = () => {
       color: string;
       dx: number;
       dy: number;
+
       constructor(
         x: number,
         y: number,
@@ -55,28 +56,22 @@ const Canvas = () => {
     }
 
     const randomColor = () => {
-      let color = {
-        r: Math.random(),
-        g: Math.random(),
-        b: Math.random(),
-        a: Math.random() / 4 + 0.25,
-      };
-      if (color.r === 0 && color.g === 0 && color.b === 0) {
-        color = {
-          r: 1,
-          g: 1,
-          b: 1,
-          a: 0.5,
-        };
-      }
-      return `rgba(${color.r * 255},${color.g * 255},${color.b * 255},${
-        color.a
-      })`;
+      const colors = [
+        "#fff60080",
+        "#ff005c80",
+        "#eb5e0b80",
+        "#5eaaa880",
+        "#ec464680",
+        "#00af9180",
+        "#b3418080",
+        "#252a3480",
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
     };
 
     const circles: Circle[] = [];
-    let radiusFactor = window.innerWidth / 10;
-    let speedFactor = 7;
+    let radiusFactor = window.innerWidth / 20;
+    let speedFactor = 10;
     //?speed and radius is decided based on the width of device
     if (window.innerWidth < 700) {
       radiusFactor = window.innerWidth / 12;
@@ -91,14 +86,19 @@ const Canvas = () => {
       canvas.height = window.innerHeight;
     });
 
-    for (let i = 0; i < 4; i++) {
+    const addCircle = () => {
       let radius = Math.random() * radiusFactor + radiusFactor;
       let x = Math.random() * (window.innerWidth - radius * 2) + radius;
-      let y = Math.random() * (window.innerHeight - radius * 2) + radius;
+      let y =
+        Math.random() * ((window.innerHeight * 9) / 10 - radius * 2) + radius;
       let color = randomColor();
       //?Speed factor and radius is used from the if statements present above
       const circle = new Circle(x, y, radius, color, speedFactor);
       circles.push(circle);
+    };
+
+    for (let i = 0; i < 20; i++) {
+      addCircle();
     }
 
     function animate() {
@@ -110,12 +110,13 @@ const Canvas = () => {
     }
 
     animate();
-  });
+  }, []);
 
   return <StyledCanvas id="canvas"></StyledCanvas>;
 };
 
 const StyledCanvas = styled.canvas`
+  z-index: -1;
   position: absolute;
   top: 0;
   left: 0;

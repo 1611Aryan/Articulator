@@ -39,6 +39,7 @@ const StyledNotebook = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 0.95;
   svg {
     transform: scale(0.6);
     cursor: pointer;

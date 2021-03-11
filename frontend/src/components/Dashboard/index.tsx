@@ -5,14 +5,14 @@ import NewNotebook from "./NewNotebook";
 import Notebook from "./Notebook";
 import Canvas from "./Canvas";
 
-const Dashboard = () => {
+const Dashboard: React.FC<{ setToken: any }> = ({ setToken }) => {
   const [notebooks, setNotebooks] = useState(["Notebook 1", "Ideas", "Random"]);
 
   return (
     <StyledDashboard>
-      <DashboardNav />
-      <Canvas />
+      <DashboardNav setToken={setToken} />
       <StyledDashboardContent>
+        <Canvas />
         <div className="subNav">
           <h3>Hello There Aryan!</h3>
         </div>
@@ -42,11 +42,14 @@ const StyledDashboard = styled.main`
 `;
 
 const StyledDashboardContent = styled.main`
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden auto;
+  overflow: hidden;
   padding: 1rem;
   z-index: 2;
+  background: #ffffffaa;
+
   .subNav {
     color: #303030;
     width: 100%;
@@ -55,6 +58,7 @@ const StyledDashboardContent = styled.main`
   }
   ul {
     width: 100%;
+    max-height: 100%;
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;

@@ -25,7 +25,6 @@ const SignUp = () => {
 
   //Effects
   useEffect(() => {
-    localStorage.getItem("accessToken");
     setAnimate(true);
     return () => setAnimate(false);
   }, []);
@@ -46,7 +45,7 @@ const SignUp = () => {
       console.log(res.data);
     } catch (err) {
       console.log(err.response.data, err.response.status);
-      setMessage(err.response.data);
+      setMessage(err.response.data.toString());
     } finally {
       setInput({ email: "", password: "", name: "" });
     }
@@ -78,6 +77,7 @@ const SignUp = () => {
           <input
             type="email"
             name="email"
+            value={input.email}
             required
             autoFocus
             onChange={changeHandler}
@@ -85,7 +85,13 @@ const SignUp = () => {
         </div>
         <div className="fieldContainer">
           <label htmlFor="name">Name:</label>
-          <input type="text" name="name" required onChange={changeHandler} />
+          <input
+            type="text"
+            name="name"
+            required
+            onChange={changeHandler}
+            value={input.name}
+          />
         </div>
         <div className="fieldContainer">
           <label htmlFor="">Password:</label>
@@ -94,6 +100,7 @@ const SignUp = () => {
             name="password"
             required
             onChange={changeHandler}
+            value={input.password}
           />
         </div>
         <button>Sign Up!!!</button>

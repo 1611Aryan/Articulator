@@ -2,17 +2,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWrench } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
-const DashboardNav = () => {
+const DashboardNav: React.FC<{ setToken: any }> = ({ setToken }) => {
+  const logout = () => {
+    setToken(null);
+  };
+
   return (
     <StyledDashNav id="dashNav">
       <h1>ARTICULATOR</h1>
       <FontAwesomeIcon icon={faWrench} />
+      <button onClick={logout}>Logout</button>
     </StyledDashNav>
   );
 };
 
 const StyledDashNav = styled.nav`
+  z-index: 2;
   width: 100vw;
+  height: 10vh;
   padding: 1rem;
   display: flex;
   justify-content: space-between;

@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import { _escapeString } from "../../util";
 import { StyledForm, StyledLogin } from "../../Style";
 
-const Login = () => {
+const Login: React.FC<{
+  setToken: any;
+}> = ({ setToken }) => {
   //URL
   const url =
     process.env.NODE_ENV === "production"
@@ -39,10 +41,11 @@ const Login = () => {
         email: input.email,
         password: input.password,
       });
-      localStorage.setItem("accessToken", res.data.accessToken);
+      setToken(res.headers.authtoken);
+      setMessage("");
     } catch (err) {
-      console.log(err.response.data, err.response.status);
-      setMessage(err.response.data);
+      console.log(err);
+      setMessage(err.response.data.toString());
     } finally {
       setInput({ email: "", password: "" });
     }
@@ -93,7 +96,7 @@ const Login = () => {
           />
         </div>
         <Link to="/forgot">Forgot Password ?</Link>
-        <button>LogIn</button>
+        <button>Login</button>
       </StyledForm>
     </StyledLogin>
   );

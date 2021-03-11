@@ -22,7 +22,7 @@ export const StyledLogin = styled(motion.div)`
   p {
     width: 100%;
     color: red;
-    font-size: clamp(0.8rem, 2vw, 1rem);
+    font-size: clamp(1rem, 2vw, 1.25rem);
   }
   //
   @media (max-width: 800px) {
