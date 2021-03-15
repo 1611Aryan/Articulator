@@ -5,16 +5,43 @@ import {
   faPencilAlt,
   faCheck,
   faTimes,
+  faDumpster,
 } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 const Notebook: React.FC<{
-  title: string;
+  notebook: {
+    id: String;
+    name: String;
+    content: String;
+  };
   pos: number;
-  setNotebooks: React.Dispatch<React.SetStateAction<string[]>>;
-}> = ({ title, pos, setNotebooks }) => {
+  setNotebooks: React.Dispatch<
+    React.SetStateAction<
+      | {
+          id: String;
+          name: String;
+          content: String;
+        }[]
+      | null
+    >
+  >;
+  token: String;
+  id: String;
+}> = ({ pos, setNotebooks, token, notebook, id }) => {
+  //URL
+  const url =
+    process.env.NODE_ENV === "production"
+      ? "/notebook/update"
+      : "http://localhost:5000/notebook/update";
+  const deleteUrl =
+    process.env.NODE_ENV === "production"
+      ? "/notebook/delete"
+      : "http://localhost:5000/notebook/delete";
+
   //State
   const [rename, setRename] = useState(false);
-  const [newName, setNewName] = useState("");
+  const [newName, setNewName] = useState(notebook.name);
 
   //Handlers
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,24 +50,58 @@ const Notebook: React.FC<{
 
   const allowRename = () => {
     setRename(!rename);
+    setNewName(notebook.name);
   };
 
-  const ChangeName = () => {
-    setNotebooks(notebooks =>
-      notebooks.map((notebook, index) => {
-        if (index === pos) {
-          if (newName !== "") return newName;
+  const ChangeName = async () => {
+    try {
+      const res = await axios.put(
+        url,
+        {
+          id,
+          name: newName,
+          content: null,
+          notebook: notebook.id,
+        },
+        {
+          headers: { authToken: token },
         }
-        return notebook;
-      })
-    );
+      );
+      setNotebooks(notebooks => {
+        if (notebooks) {
+          return notebooks.map((notebook, index) => {
+            if (index === pos) {
+              if (newName !== "") return { ...notebook, name: newName };
+            }
+            return notebook;
+          });
+        } else return notebooks;
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
     setRename(false);
   };
 
-  const blurHandler = () => {
-    console.log("Blur");
-    allowRename();
-    setNewName("");
+  const DeleteNotebook = async () => {
+    try {
+      const res = await axios.post(
+        deleteUrl,
+        { id, notebookId: notebook.id },
+        {
+          headers: { authToken: token },
+        }
+      );
+      setNotebooks(notebooks => {
+        if (notebooks) {
+          return notebooks.filter(nbk => nbk.id !== notebook.id);
+        } else return notebooks;
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -50,21 +111,39 @@ const Notebook: React.FC<{
         {rename ? (
           <>
             <input
-              value={newName}
+              value={newName.toString()}
               type="text"
               onChange={changeHandler}
-              onBlur={blurHandler}
             />
-            {newName === "" ? (
-              <FontAwesomeIcon icon={faTimes} onClick={allowRename} />
+            {newName === "" || newName === notebook.name ? (
+              <FontAwesomeIcon
+                className="cancel"
+                icon={faTimes}
+                onClick={allowRename}
+              />
             ) : (
-              <FontAwesomeIcon icon={faCheck} onClick={ChangeName} />
+              <FontAwesomeIcon
+                className="renamed"
+                icon={faCheck}
+                onClick={ChangeName}
+              />
             )}
           </>
         ) : (
           <>
-            <p>{title}</p>
-            <FontAwesomeIcon icon={faPencilAlt} onClick={allowRename} />
+            <p>{notebook.name}</p>
+            <div className="iconContainer">
+              <FontAwesomeIcon
+                className="allowRename"
+                icon={faPencilAlt}
+                onClick={allowRename}
+              />
+              <FontAwesomeIcon
+                className="delete"
+                icon={faDumpster}
+                onClick={DeleteNotebook}
+              />
+            </div>
           </>
         )}
       </StyledInformation>
@@ -83,15 +162,17 @@ const StyledNotebook = styled.li`
   flex-direction: column;
   justify-content: space-between;
   font-family: lato;
-  opacity: 0.95;
+  opacity: 0.975;
+  @supports not (aspect-ratio: 1 / 1.1) {
+    height: calc((100vw - 2rem) / 5);
+  }
 `;
 
 const StyledNotebookContent = styled.div`
   width: 100%;
-  flex-grow: 1;
+  flex: 1;
   border-radius: 10px;
   background: #fafafa;
-  cursor: pointer;
 `;
 
 const StyledInformation = styled.div`
@@ -102,6 +183,26 @@ const StyledInformation = styled.div`
   align-items: center;
   color: #fafafa;
   font-size: 1.2rem;
+  .cancel {
+    &:hover {
+      color: #ff5858;
+    }
+  }
+  .renamed {
+    &:hover {
+      color: #ffff6f;
+    }
+  }
+  .allowRename {
+    &:hover {
+      color: #ffff6f;
+    }
+  }
+  .delete {
+    &:hover {
+      color: #ff5858;
+    }
+  }
   input {
     width: 100%;
     border: 0;

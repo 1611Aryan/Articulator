@@ -69,7 +69,7 @@ const Login: React.FC<{
       transition={{ duration: 0.5, ease: "easeOut" }}
       onSubmit={submitHandler}
     >
-      <h3 onClick={() => setAnimate(!animate)}>LOGIN!!!!!</h3>
+      <h3>LOGIN!!!!!</h3>
       <StyledForm>
         <div className="fieldContainer">
           <p>{message}</p>

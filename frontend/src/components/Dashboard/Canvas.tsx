@@ -93,11 +93,11 @@ const Canvas = () => {
         Math.random() * ((window.innerHeight * 9) / 10 - radius * 2) + radius;
       let color = randomColor();
       //?Speed factor and radius is used from the if statements present above
-      const circle = new Circle(x, y, radius, color, speedFactor);
+      const circle = new Circle(x, y, radius, color, speedFactor / 1.5);
       circles.push(circle);
     };
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
       addCircle();
     }
 

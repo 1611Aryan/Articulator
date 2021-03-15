@@ -1,8 +1,8 @@
 export {};
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = require("./../Models/user.model");
 const bcrypt = require("bcrypt");
+const { v4 } = require("uuid");
 
 exports.all = async (req: any, res: any) => {
   try {
@@ -57,6 +57,13 @@ exports.signUp = async (req: any, res: any) => {
       name: req.body.name,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
+      notebooks: [
+        {
+          id: v4(),
+          name: "Notebook 1",
+          content: "",
+        },
+      ],
     });
     await user.save();
     res.status(202).send("Account Created");

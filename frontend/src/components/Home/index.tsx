@@ -21,7 +21,11 @@ const Home = () => {
   const [token, setToken] = useLocalStorage("auth", null);
 
   //State
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{
+    name: String;
+    id: String;
+    iat: number;
+  } | null>(null);
 
   useEffect(() => {
     if (token)
@@ -60,7 +64,7 @@ const Home = () => {
         </div>
       </StyledHome>
     );
-  else return <Dashboard setToken={setToken} />;
+  else return <Dashboard setToken={setToken} user={user} token={token} />;
 };
 
 const StyledHome = styled.section`

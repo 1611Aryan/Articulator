@@ -1,14 +1,63 @@
+import axios from "axios";
 import styled from "styled-components";
+import { v4 } from "uuid";
 
 const Notebook: React.FC<{
-  setNotebooks: React.Dispatch<React.SetStateAction<string[]>>;
-}> = ({ setNotebooks }) => {
-  //handlers
-  const addNotebook = () => {
-    setNotebooks(notebooks => [
-      ...notebooks,
-      `Notebook ${notebooks.length + 1}`,
-    ]);
+  setNotebooks: React.Dispatch<
+    React.SetStateAction<
+      | {
+          id: String;
+          name: String;
+          content: String;
+        }[]
+      | null
+    >
+  >;
+  token: String;
+  id: String;
+  notebooks:
+    | {
+        id: String;
+        name: String;
+        content: String;
+      }[]
+    | null;
+}> = ({ setNotebooks, token, id, notebooks }) => {
+  //URL
+  const url =
+    process.env.NODE_ENV === "production"
+      ? "/notebook/add"
+      : "http://localhost:5000/notebook/add";
+
+  //Handlers
+  const addNotebook = async () => {
+    const notebookId = v4();
+    if (notebooks) {
+      setNotebooks(() => {
+        return [
+          ...notebooks,
+          {
+            name: `Notebook ${notebooks.length + 1}`,
+            content: "",
+            id: notebookId,
+          },
+        ];
+      });
+      try {
+        const res = axios.put(
+          url,
+          {
+            id,
+            name: `Notebook ${notebooks.length + 1}`,
+            notebookId,
+          },
+          { headers: { authToken: token } }
+        );
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   return (
@@ -39,10 +88,13 @@ const StyledNotebook = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.95;
+  opacity: 0.975;
   svg {
     transform: scale(0.6);
     cursor: pointer;
+  }
+  @supports not (aspect-ratio: 1 / 1.1) {
+    height: calc((100vw - 2rem) / 5);
   }
 `;
 

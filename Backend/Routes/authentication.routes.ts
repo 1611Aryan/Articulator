@@ -8,7 +8,7 @@ const {
   forgot,
 } = require("./../Controllers/authentication.controller");
 
-router.route("/").get(verifyToken, all);
+router.route("/").get(all);
 
 router.route("/authorize").post(verifyToken, (req: any, res: any) => {
   res.send({ user: req.user, auth: true });
