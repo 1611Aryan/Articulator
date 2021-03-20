@@ -22,9 +22,7 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "nodemon server.ts",
-    "start": " node server.js",
-    // "install-client": "cd client && yarn",
-    // "heroku-postbuild": "yarn run install-client"
+    "start": " node server.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
