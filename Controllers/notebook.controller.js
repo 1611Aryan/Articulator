@@ -14,6 +14,29 @@ exports.getNotebooks = async (req, res) => {
         res.status(500).send(err);
     }
 };
+exports.getOneNotebook = async (req, res) => {
+    const userId = req.user.id;
+    const notebookId = req.params.id;
+    try {
+        // const user = await User.findById(userId);
+        const user = await User.findOne({ _id: userId }, {
+            notebooks: {
+                $elemMatch: {
+                    id: notebookId,
+                },
+            },
+        });
+        if (user) {
+            const notebook = user.notebooks.filter((notebook) => notebook.id === notebookId);
+            res.status(200).send(notebook);
+        }
+        else
+            res.sendStatus(401);
+    }
+    catch (err) {
+        res.send(err);
+    }
+};
 exports.updateNotebook = async (req, res) => {
     const userId = req.body.id;
     const newName = req.body.name;

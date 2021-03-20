@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const { verifyToken } = require("./../Controllers/authentication.controller");
-const { getNotebooks, updateNotebook, addNotebook, deleteNotebook, } = require("./../Controllers/notebook.controller");
+const { getNotebooks, updateNotebook, addNotebook, deleteNotebook, getOneNotebook, } = require("./../Controllers/notebook.controller");
+router.route("/one/:id").get(verifyToken, getOneNotebook);
 router.route("/:id").get(verifyToken, getNotebooks);
 router.route("/update").put(verifyToken, updateNotebook);
 router.route("/add").put(verifyToken, addNotebook);
