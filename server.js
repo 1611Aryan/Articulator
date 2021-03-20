@@ -1,5 +1,6 @@
 "use strict";
 const express = require("express");
+const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 if (process.env.NODE_ENV !== "production")
@@ -22,4 +23,10 @@ const authenticationRouter = require("./Routes/authentication.routes");
 const notebookRouter = require("./Routes/notebooks.routes");
 app.use("/user", authenticationRouter);
 app.use("/notebook", notebookRouter);
+//Static Serve
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "client/build")));
+    app.use("/signup", express.static(path.join(__dirname, "client/build")));
+    app.use("/dashboard", express.static(path.join(__dirname, "client/build")));
+}
 app.listen(PORT, () => console.log(`Server running on Port ${PORT}`));
