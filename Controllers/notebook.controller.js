@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const User = require("./../Models/user.model");
-const { v4 } = require("uuid");
 exports.getNotebooks = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findOne({ _id: req.params.id }, { notebooks: { name: 1, id: 1 }, name: 1 });
         if (user)
             res.status(200).send(user);
         else
@@ -38,7 +37,7 @@ exports.getOneNotebook = async (req, res) => {
     }
 };
 exports.updateNotebook = async (req, res) => {
-    const userId = req.body.id;
+    const userId = req.user.id;
     const newName = req.body.name;
     const notebookId = req.body.notebook;
     const newContent = req.body.content;
@@ -88,7 +87,7 @@ exports.updateNotebook = async (req, res) => {
         res.sendStatus(400);
 };
 exports.addNotebook = async (req, res) => {
-    const id = req.body.id;
+    const id = req.user.id;
     const name = req.body.name;
     const notebookId = req.body.notebookId;
     try {
@@ -108,7 +107,7 @@ exports.addNotebook = async (req, res) => {
     }
 };
 exports.deleteNotebook = async (req, res) => {
-    const id = req.body.id;
+    const id = req.user.id;
     const notebookId = req.body.notebookId;
     try {
         await User.updateOne({ _id: id }, {
